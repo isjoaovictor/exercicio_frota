@@ -1,6 +1,15 @@
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, TypedDict
 
 class State(TypedDict):
     pergunta: str
-    frota: str
+    frota: Any
     resposta_llm: str
+    resultado: str
+
+
+state: State = {
+    "pergunta": "",
+    "frota": {},
+    "resposta_llm": "",
+    "resultado": "",
+}
