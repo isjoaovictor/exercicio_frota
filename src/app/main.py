@@ -23,36 +23,26 @@ def load_environment() -> None:
 
 load_environment()
 
-from graph.builder import graph
-from graph.state import state
 from utils.langfuse_client import run_config
-
-i = 1
-
-
+from graph.state import state
+from graph.builder import graph
 
 def main() -> None:
-    resultados = []
 
-    for numero_teste in range(1, 6):
-        pergunta = input(f"Digite a pergunta do teste {numero_teste}: ")
-        estado_inicial = {**state, "pergunta": pergunta}
+    pergunta = input(f"Digite a pergunta: ")
+    estado_inicial = {**state, "pergunta": pergunta}
 
-        resposta = graph.invoke(
-            estado_inicial,
-            config=run_config(),
-        )
+    resposta = graph.invoke(
+        estado_inicial,
+        config=run_config(),
+    )
 
-        resultados.append(resposta["resultado"])
-
-    print("\n===== RESULTADOS DOS 5 TESTES =====")
-
-    for numero_teste, resultado in enumerate(resultados, start=1):
-        print(f"\nTeste {numero_teste}:")
-        print(resultado)
+    print(f"{resposta["resultado"]}")
 
 
 if __name__ == "__main__":
     main()
 
-#Qual navio chega primeiro ao porto?
+
+
+# Qual navio chega primeiro ao porto?

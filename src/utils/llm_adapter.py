@@ -7,9 +7,11 @@ def get_llm() -> Any:
     model = os.getenv("LLM_MODEL")
 
     if not provider:
-        raise RuntimeError("A variável de ambiente LLM_PROVIDER não foi definida.")
+        raise RuntimeError(
+            "A variável de ambiente LLM_PROVIDER não foi definida.")
     if not model:
-        raise RuntimeError("A variável de ambiente LLM_MODEL não foi definida.")
+        raise RuntimeError(
+            "A variável de ambiente LLM_MODEL não foi definida.")
 
     provider = provider.lower()
 
@@ -27,5 +29,10 @@ def get_llm() -> Any:
         from langchain_anthropic import ChatAnthropic
 
         return ChatAnthropic(model=model)
+
+    if provider == "google":
+        from langchain_google_genai import ChatGoogleGenerativeAI
+
+        return ChatGoogleGenerativeAI(model=model)
 
     raise ValueError(f"Provedor de LLM não suportado: {provider}")
