@@ -1,7 +1,8 @@
 from typing import Annotated, TypedDict
 from langgraph.graph import add_messages
 
-class state(TypedDict, total=False):
+
+class State(TypedDict, total=False):
     pergunta: str
     frota: dict
     intent: str
@@ -13,7 +14,8 @@ class state(TypedDict, total=False):
     resultado: str
 
 
-state: State = {
+
+ESTADO_INICIAL: State = {
     "pergunta": "",
     "frota": {},
     "intent": "",

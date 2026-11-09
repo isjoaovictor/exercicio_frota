@@ -1,24 +1,14 @@
-import json
-
-from graph.prompt.choose_ship import prompt
 from graph.state import State
-from utils.llm_adapter import get_llm
 
 
 def decide(state: State) -> dict[str, str]:
-    llm = get_llm()
+    """Usa a conclusão do analyze (última mensagem do modelo, após as ferramentas)."""
+    mensagens = state.get("messages", [])
 
-    if llm is None:
-        raise RuntimeError("O LLM não está configurado.")
+    for mensagem in reversed(mensagens):
+        if mensagem.type == "ai" and not getattr(mensagem, "tool_calls", None):
+            texto = mensagem.text
+            if texto:
+                return {"resposta_llm": texto}
 
-    frota = state["frota"]
-
-    frota_texto = (
-        json.dumps(frota, ensure_ascii=False)
-        if not isinstance(frota, str)
-        else frota
-    )
-
-    resposta = llm.invoke(prompt.format(frota=frota_texto))
-
-    return {"resposta_llm": resposta.text}
+    raise RuntimeError("Nenhuma resposta final do modelo foi encontrada em 'messages'.")

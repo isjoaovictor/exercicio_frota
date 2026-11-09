@@ -21,5 +21,5 @@ def reserva_ok(combustivel_t: float, reserva_t: float) -> bool:
     """Verifica se a reserva de combustível é suficiente."""
     return combustivel_t >= reserva_t
 
-TOOLS = [calcular_eta_horas, velocidade_efetiva, reserva_ok]
+TOOLS = [reserva_ok, calcular_eta_horas, velocidade_efetiva]
 

@@ -1,6 +1,9 @@
 from graph.state import State
+from graph.tools import TOOLS
+from utils.llm_adapter import get_llm
 
 
 def analyze(state: State) -> dict:
-    """N? provis?rio; implementar a l?gica antes de conectar ao fluxo."""
-    return {}
+    """enviar mensagens a llm e informar as ferramentas disponíveis."""
+    llm = get_llm().bind_tools(TOOLS)
+    return {"messages": [llm.invoke(state["messages"])]}
