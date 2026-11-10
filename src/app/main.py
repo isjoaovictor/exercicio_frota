@@ -1,9 +1,9 @@
+import json
 import os
 import sys
 from pathlib import Path
 from langchain_core.messages import HumanMessage
 from langgraph.types import Command
-
 
 
 SRC_DIR = Path(__file__).resolve().parents[1]
@@ -31,28 +31,42 @@ from graph.state import ESTADO_INICIAL
 from graph.builder import graph
 
 def main() -> None:
-
     pergunta = input(f"Digite a pergunta: ")
     estado_inicial = {
         **ESTADO_INICIAL,
         "pergunta": pergunta,
         "messages": [HumanMessage(content=pergunta)],
     }
-    opcao = input("Aprovar recomendação? (s/n): ").strip().lower()
-    while opcao not in ("s", "n"):
-        opcao = input("Digite s ou n: ").strip().lower()
-        
-    config = {"configurable": {"thread_id": "frota-1"}}
-    resposta = graph.invoke(Command(resume=opcao == "s"), config=config)
-    print("Aprovado:", resposta["aprovado"])
-    return
-    
-    print(resposta["resultado"])
+
+    try:
+
+        config = {"configurable": {"thread_id": "frota-1"}}
+        resposta = graph.invoke(estado_inicial, config=config)
+
+        pausas = resposta.get("__interrupt__")
+        if pausas:
+            print("Recomendação: ", pausas[0].value["recomendacao"])
+            print("Nota do operador:", resposta.get("nota_operador") or "Sem nota")
+
+            opcao = input("\nAprovar recomendação? (s/n): ").strip().lower()
+
+            while opcao not in ("s", "n"):
+                opcao = input("Digite s ou n: ").strip().lower()
+
+            resposta = graph.invoke(
+                Command(resume=opcao == "s"), config=config)
+
+
+            # return
+
+        print(resposta["resultado"])
+
+    except ValueError:
+        print("Erro, tente novamente.")
 
 
 if __name__ == "__main__":
     main()
-
 
 
 # Qual navio chega primeiro ao porto?

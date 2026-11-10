@@ -4,5 +4,5 @@ from langgraph.types import interrupt
 
 def human_review(state: State) -> dict:
     mensagem = state["messages"][-1].text
-    interrupt({"recomendacao": mensagem})
-    return {"recomendacao": mensagem}
+    decisao = interrupt({"recomendacao": mensagem})
+    return {"recomendacao": mensagem, "aprovado": decisao}
